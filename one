@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Author Birthplaces</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2); // Set initial map view
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        var authors = [
+            { name: 'William Shakespeare', birthplace: [52.1917, -1.7083], city: 'Stratford-upon-Avon, England', bio: 'William Shakespeare, the renowned English playwright and poet, is believed to have had a mysterious period known as the "lost years," during which his activities and whereabouts remain largely unknown. His works, including plays like "Hamlet" and "Romeo and Juliet," have had a profound influence on literature and theater.' , image: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Shakespeare.jpg' },
+            { name: 'Jane Austen', birthplace: [51.7174, -1.2224], city: 'Steventon Rectory, Hampshire, England', bio: 'Jane Austen, known for her exquisite novels like "Pride and Prejudice," had a talent for social commentary and satire. Less known is her engagement to Harris Bigg-Wither, which she accepted but later withdrew her consent the next day. The incident inspired themes in her works.' , image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jane_Austen_1873.jpg' },
+            { name: 'Mark Twain', birthplace: [39.0097, -91.5031], city: 'Florida, Missouri, United States', bio: 'Mark Twain, the iconic American writer, was born Samuel Langhorne Clemens. He held diverse occupations, including riverboat pilot and gold prospector. His adventurous life infused his stories with humor and wit, as seen in classics like "The Adventures of Tom Sawyer".' , image: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Mark_Twain_by_AF_Bradley.jpg' },
+            { name: 'Charles Dickens', birthplace: [50.1109, -5.5081], city: 'Portsmouth, England', bio: 'Charles Dickens, the prolific English novelist, had a fascination with the paranormal. He claimed to have seen the ghost of his deceased maid and often attended séances. His popular works like "A Tale of Two Cities" and "Great Expectations" explore themes of social inequality.' , image: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Charles_Dickens_by_Watkins%2C_1858.png' },
+            { name: 'Leo Tolstoy', birthplace: [53.0189, 37.6105], city: 'Yasnaya Polyana, Tula, Russia', bio: 'Leo Tolstoy, the Russian literary giant, struggled with bouts of depression and existential questions throughout his life. Despite his aristocratic background, he became a strong advocate of pacifism and simple living. His masterpieces "War and Peace" and "Anna Karenina" reflect his philosophical ponderings.' , image: 'https://upload.wikimedia.org/wikipedia/commons/d/db/L.N.Tolstoy_Prokudin-Gorsky.jpg' },
+            { name: 'J.K. Rowling', birthplace: [51.5002, -2.5486], city: 'Yate, Gloucestershire, England', bio: 'J.K. Rowling, the beloved author of the "Harry Potter" series, faced numerous rejections before finding success. What\'s surprising is that she wrote the series\' first book on napkins while she was a struggling single mother. Her magical world has captivated readers of all ages.' , image: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/J._K._Rowling_2010.jpg' },
+            { name: 'Gabriel García Márquez', birthplace: [10.5918, -74.1898], city: 'Aracataca, Magdalena, Colombia', bio: 'Gabriel García Márquez, the Colombian author known for pioneering magical realism, was once a journalist. While reporting on a sailor lost at sea, he couldn\'t bear to tell the sailor\'s wife the tragic news and wrote a fictional account that laid the groundwork for his signature style.' , image: 'https://upload.wikimedia.org/wikipedia/commons/8/88/Gabriel_Garc%C3%ADa_M%C3%A1rquez%2C_Oxford%2C_10_June_2002.jpg' },
+            { name: 'George Orwell', birthplace: [27.3331, 84.4180], city: 'Motihari, Bihar, British India (now in India)', bio: 'George Orwell, whose real name was Eric Arthur Blair, had a diverse career that included working as a police officer in Burma and fighting in the Spanish Civil War. He is known for his dystopian novel "1984" and his powerful essay "Shooting an Elephant."' , image: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/George_Orwell_press_photo.jpg' },
+            { name: 'Agatha Christie', birthplace: [50.5685, -3.0060], city: 'Torquay, Devon, England', bio: 'Agatha Christie, the "Queen of Mystery," was also an accomplished surfer. She was known to catch waves while vacationing in Hawaii. Her detective stories, like "Murder on the Orient Express" and "The Murder of Roger Ackroyd," continue to captivate readers worldwide.' , image: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dame_Agatha_Christie_%28crop%29.jpg' },
+            { name: 'Ernest Hemingway', birthplace: [41.9214, -87.6536], city: 'Oak Park, Illinois, United States', bio: 'Ernest Hemingway, the American novelist and adventurer, volunteered as an ambulance driver during World War I. His experiences influenced his writing style characterized by brevity and clarity. Works like "The Old Man and the Sea" reflect his love for adventure.' , image: 'https://upload.wikimedia.org/wikipedia/commons/7/73/Ernest_Hemingway_1923_passport_photo.jpg' },
+            { name: 'F. Scott Fitzgerald', birthplace: [44.9804, -93.1569], city: 'St. Paul, Minnesota, United States', bio: 'F. Scott Fitzgerald, the Jazz Age novelist, had a tumultuous relationship with his wife, Zelda. They were known for their extravagant lifestyle and parties. Fitzgerald\'s masterpiece "The Great Gatsby" explores themes of wealth, aspiration, and social change.' , image: 'https://upload.wikimedia.org/wikipedia/commons/8/8e/F_Scott_Fitzgerald_1921.jpg' },
+            { name: 'J.R.R. Tolkien', birthplace: [51.6885, -2.6661], city: 'Bloemfontein, Orange Free State (now Free State), South Africa', bio: 'J.R.R. Tolkien, the creator of Middle-earth, had an early fascination with languages. He developed his own languages, including Elvish and Dwarvish, and even created scripts for them. His epic fantasy novels "The Hobbit" and "The Lord of the Rings" are beloved worldwide.' , image: 'https://upload.wikimedia.org/wikipedia/commons/8/88/Tolkien_1916.jpg' },
+            { name: 'Toni Morrison', birthplace: [41.9036, -87.6488], city: 'Lorain, Ohio, United States', bio: 'Toni Morrison, the Nobel Prize-winning author, was also an accomplished playwright and editor. She edited works that spotlighted African American literature and culture. Her novel "Beloved," inspired by a true story of an escaped slave, addresses themes of identity and trauma.' , image: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Toni_Morrison_cropped.jpg' },
+            { name: 'Albert Camus', birthplace: [36.5704, 4.6222], city: 'Mondovi, French Algeria (now Dréan, Algeria)', bio: 'Albert Camus, the French philosopher and author, was an amateur goalkeeper for a soccer team in Algeria. He is known for his existentialist philosophy and literary works like "The Stranger" and "The Myth of Sisyphus." His thought-provoking narratives explore the absurdity of human existence.' , image: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Albert_Camus%2C_gagnant_du_prix_Nobel%2C_portrait_en_m%C3%A9daillon.jpg' },
+            { name: 'Franz Kafka', birthplace: [50.0790, 14.4297], city: 'Prague, Kingdom of Bohemia (now in Czech Republic)', bio: 'Franz Kafka, the enigmatic Czech writer, worked as an insurance officer during the day and wrote during his evenings and weekends. His introspective works like "The Metamorphosis" and "The Trial" explore themes of alienation and the absurdity of bureaucracy.' , image: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/Franz_Kafka_1906_-_Restoration.jpg' },
+            // Continue adding more authors with their details
+        ];
+
+        authors.forEach(function (author) {
+            var marker = L.marker(author.birthplace).addTo(map);
+            
+            marker.bindPopup(`
+                <img src="${author.image}" alt="${author.name}" width="150" height="150"><br>
+                <b>${author.name}</b><br>${author.bio}<br>Born in: ${author.city}`
+            );
+            
+            marker.on('click', function () {
+                marker.openPopup();
+            });
+        });
+    </script>
+</body>
+</html>
